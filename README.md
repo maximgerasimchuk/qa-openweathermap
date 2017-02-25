@@ -1,2 +1,2 @@
 # qa-openwheatermap
-Example of automation tests
+Example of sample automation tests

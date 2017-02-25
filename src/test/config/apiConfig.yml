@@ -1,0 +1,7 @@
+apiKey: NEED_TO_CHANGE
+baseURL: http://api.openweathermap.org/data/2.5
+methods:
+  currentWeatherURL: http://api.openweathermap.org/data/2.5/weather
+  forecastURL: http://api.openweathermap.org/data/2.5/forecast
+  forecastDailyURL: http://api.openweathermap.org/data/2.5/forecast/daily
+  historyURL: http://history.openweathermap.org/data/2.5/history/city
