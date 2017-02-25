@@ -1,6 +1,6 @@
 <suite name="Weather API Testing">
 
-    <test name="Availability Tests">
+    <test name="CurrentWeather Tests">
         <classes>
             <class name="api.TestCurrentWeather"/>
         </classes>
