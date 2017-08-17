@@ -1,5 +1,7 @@
-<suite name="Weather API Testing">
-
+<suite name="Weather Web Testing">
+    <listeners>
+        <listener class-name="web.utils.CustomTestListener"/>
+    </listeners>
     <test name="HomePage Tests">
         <classes>
             <class name="web.TestHomePage"/>

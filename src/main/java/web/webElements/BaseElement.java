@@ -17,8 +17,8 @@ public class BaseElement {
     protected static WebDriverWrapper driver;
     protected static JavascriptExecutor executor;
 
-    public BaseElement() {
-        this.driver = WebDriverFactory.getDriverWrapper();
+    public BaseElement(WebDriverWrapper driver) {
+        this.driver = driver;
         executor = (JavascriptExecutor)driver;
     }
 

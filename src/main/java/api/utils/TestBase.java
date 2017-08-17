@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * Created by maxim on 1/21/2017.
  */
+
 public class TestBase {
     protected static String baseURL;
     protected static Map<String, String> methods;

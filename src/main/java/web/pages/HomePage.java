@@ -4,6 +4,7 @@ import api.utils.DateTimeHelper;
 import api.utils.ReportWriter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import web.utils.WebDriverWrapper;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,8 +22,8 @@ public class HomePage extends BasePage {
     private String date;
     private String city;
 
-    public HomePage(String url) {
-        super(url);
+    public HomePage(WebDriverWrapper driver, String url) {
+        super(driver, url);
     }
 
     public static By getSearchInput() {
@@ -75,6 +76,7 @@ public class HomePage extends BasePage {
 
     public void fillSearch(String city) {
         ReportWriter.logInfo("Fill search form : " + city);
+        baseElement.waitAndVerifyElementPresent(SEARCH_INPUT);
         inputField.click(SEARCH_INPUT);
         inputField.clear(SEARCH_INPUT);
         inputField.sendKeys(SEARCH_INPUT, city);
@@ -89,7 +91,6 @@ public class HomePage extends BasePage {
     public void search() {
         ReportWriter.logTestStep("Search.");
         baseElement.click(SEARCH_BUTTON);
-        baseElement.waitUntilInvisibilityOfElement(ResultPage.getResultCity());
     }
 
     public List getListOfAllLinks() {

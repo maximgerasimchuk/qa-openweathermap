@@ -112,11 +112,11 @@
             <version>1.19.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>1.6</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>xmlunit</groupId>-->
+            <!--<artifactId>xmlunit</artifactId>-->
+            <!--<version>1.6</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -142,11 +142,11 @@
             <version>2.2.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.appium</groupId>
-            <artifactId>java-client</artifactId>
-            <version>4.1.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.appium</groupId>-->
+            <!--<artifactId>java-client</artifactId>-->
+            <!--<version>4.1.2</version>-->
+        <!--</dependency>-->
 
     </dependencies>
 

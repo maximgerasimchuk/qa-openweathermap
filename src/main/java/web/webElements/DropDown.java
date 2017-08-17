@@ -3,6 +3,7 @@ package web.webElements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import web.utils.WebDriverWrapper;
 
 import java.util.List;
 
@@ -10,8 +11,8 @@ import java.util.List;
  * Created by maxim on 1/28/2017.
  */
 public class DropDown extends BaseElement{
-    public DropDown() {
-        super();
+    public DropDown(WebDriverWrapper driver) {
+        super(driver);
     }
 
     public void selectValue(By caretLocator, By list, By valueListLocator, String valueToSelect) {

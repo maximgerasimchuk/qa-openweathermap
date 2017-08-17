@@ -19,30 +19,27 @@ public abstract class BasePage {
     protected BaseElement baseElement;
     protected DropDown dropDown;
 
-    public boolean isOpened()
-    {
+    public boolean isOpened() {
         ReportWriter.logInfo("'" + pageUrl + "' is opened!");
         return driver.getCurrentUrl().contains(pageUrl);
     }
 
-    public BasePage()
-    {
-        driver = WebDriverFactory.getDriverWrapper();
-        setElements();
+    public BasePage(WebDriverWrapper driver) {
+        this.driver = driver;
+        setElements(driver);
     }
 
-    public BasePage(String basePageUrl)
-    {
-        driver = WebDriverFactory.getDriverWrapper();
+    public BasePage(WebDriverWrapper driver, String basePageUrl) {
+        this.driver = driver;
         this.basePageUrl = basePageUrl;
         pageUrl = basePageUrl;
-        setElements();
+        setElements(driver);
     }
 
-    private void setElements(){
-        inputField = new InputField();
-        baseElement = new BaseElement();
-        dropDown = new DropDown();
+    private void setElements(WebDriverWrapper driver) {
+        inputField = new InputField(driver);
+        baseElement = new BaseElement(driver);
+        dropDown = new DropDown(driver);
     }
 
 }

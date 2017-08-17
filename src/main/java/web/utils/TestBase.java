@@ -1,7 +1,6 @@
 package web.utils;
 
 import api.utils.ReportWriter;
-import web.webElements.BaseElement;
 import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -9,7 +8,9 @@ import org.testng.annotations.BeforeSuite;
 /**
  * Created by maxim on 1/28/2017.
  */
-public class TestBase extends BaseElement {
+
+public class TestBase {
+    public WebDriverWrapper driver;
     protected static String URL;
     protected static String environment;
     protected static String browser;
@@ -18,8 +19,8 @@ public class TestBase extends BaseElement {
     @BeforeSuite(groups = {"Config"})
     public void setUp() {
         PropertyConfigurator.configure("src/main/resources/log4j.properties");
-        WebDriverFactory webDriverFactory = new WebDriverFactory();
         getProperties();
+        WebDriverFactory webDriverFactory = new WebDriverFactory();
         driver = webDriverFactory.initDriver(browser);
         setURL();
     }
@@ -29,15 +30,15 @@ public class TestBase extends BaseElement {
         environment = System.getProperty("environment");
         branchName = System.getProperty("branchName");
 
-        if (browser == null) {
+        if (browser == null || browser.equals("")) {
             browser = "chrome";
         }
 
-        if (environment == null) {
+        if (environment == null || environment.equals("")) {
             environment = "production";
         }
 
-        if (branchName == null) {
+        if (branchName == null || branchName.equals("")) {
             branchName = "master";
         }
 
@@ -58,5 +59,9 @@ public class TestBase extends BaseElement {
     @AfterSuite(groups = {"Config"})
     public void quitDriver() {
         driver.quit();
+    }
+
+    public WebDriverWrapper getDriver() {
+        return driver;
     }
 }

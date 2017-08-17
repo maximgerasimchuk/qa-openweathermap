@@ -1,7 +1,9 @@
 package web.blocks;
 
+import api.utils.ReportWriter;
 import web.pages.HomePage;
 import org.openqa.selenium.By;
+import web.utils.WebDriverWrapper;
 
 /**
  * Created by maxim on 1/28/2017.
@@ -20,10 +22,12 @@ public class Header extends BaseBlock {
     private static final By ABOUT_DROPDOWN_TOGGLE = By.xpath("//a[text()='About ']");
     private static final By ABOUT_DROPDOWN_MENU = By.xpath("//a[text()='About ']/following-sibling::ul[@class='dropdown-menu']");
 
+    public Header(WebDriverWrapper driver){
+        super(driver);
+    }
+
     public void goToHomePage(){
+        ReportWriter.logInfo("Return to the Home page");
         baseElement.click(OPEN_WEATHER_MAP_LOGO);
-        baseElement.waitUntilElementIsVisible(HomePage.getSearchInput());
-        baseElement.waitUntilInvisibilityOfElement(HomePage.getSearchInput(), 60);
-        baseElement.waitAndVerifyElementPresent(HomePage.getSearchInput());
     }
 }

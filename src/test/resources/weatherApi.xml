@@ -1,5 +1,7 @@
 <suite name="Weather API Testing">
-
+    <listeners>
+        <listener class-name="api.utils.CustomTestListener"/>
+    </listeners>
     <test name="CurrentWeather Tests">
         <classes>
             <class name="api.TestCurrentWeather"/>

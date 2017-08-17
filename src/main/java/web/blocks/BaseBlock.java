@@ -18,16 +18,16 @@ public class BaseBlock {
     protected BaseElement baseElement;
     protected DropDown dropDown;
 
-    public BaseBlock()
+    public BaseBlock(WebDriverWrapper driver)
     {
-        driver = WebDriverFactory.getDriverWrapper();
-        setElements();
+        this.driver = driver;
+        setElements(driver);
     }
 
-    private void setElements(){
-        inputField = new InputField();
-        baseElement = new BaseElement();
-        dropDown = new DropDown();
+    private void setElements(WebDriverWrapper driver){
+        inputField = new InputField(driver);
+        baseElement = new BaseElement(driver);
+        dropDown = new DropDown(driver);
     }
 
     public void refreshPage(By by){

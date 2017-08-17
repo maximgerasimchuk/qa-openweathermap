@@ -2,14 +2,15 @@ package web.webElements;
 
 import web.utils.TestUtils;
 import org.openqa.selenium.By;
+import web.utils.WebDriverWrapper;
 
 /**
  * Created by maxim on 1/28/2017.
  */
 public class InputField extends BaseElement {
 
-    public InputField() {
-        super();
+    public InputField(WebDriverWrapper driver) {
+        super(driver);
     }
 
     public void sendKeys(By by, CharSequence... charSequences) {
