@@ -3,3 +3,4 @@ qa-openweathermap.iml
 src/main/main.iml
 src/test/test.iml
 target/
+debug.log

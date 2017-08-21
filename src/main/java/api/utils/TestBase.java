@@ -3,6 +3,7 @@ package api.utils;
 import api.configEntities.ConfigEntity;
 import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import java.util.Map;
  * Created by maxim on 1/21/2017.
  */
 
+@Listeners(CustomTestListener.class)
 public class TestBase {
     protected static String baseURL;
     protected static Map<String, String> methods;

@@ -4,11 +4,13 @@ import api.utils.ReportWriter;
 import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
 /**
  * Created by maxim on 1/28/2017.
  */
 
+@Listeners(CustomTestListener.class)
 public class TestBase {
     public WebDriverWrapper driver;
     protected static String URL;
