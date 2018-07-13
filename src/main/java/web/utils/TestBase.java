@@ -2,9 +2,7 @@ package web.utils;
 
 import api.utils.ReportWriter;
 import org.apache.log4j.PropertyConfigurator;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 /**
  * Created by maxim on 1/28/2017.
@@ -12,18 +10,21 @@ import org.testng.annotations.Listeners;
 
 @Listeners(CustomTestListener.class)
 public class TestBase {
-    public WebDriverWrapper driver;
+    private static ThreadLocal<WebDriverWrapper> drivers = new ThreadLocal<>();
+    private String selenoidURL = "http://127.0.0.1:4444/wd/hub";
     protected static String URL;
     protected static String environment;
     protected static String browser;
     protected static String branchName;
 
-    @BeforeSuite(groups = {"Config"})
+    @BeforeTest()
+    @Parameters()
     public void setUp() {
         PropertyConfigurator.configure("src/main/resources/log4j.properties");
         getProperties();
         WebDriverFactory webDriverFactory = new WebDriverFactory();
-        driver = webDriverFactory.initDriver(browser);
+        WebDriverWrapper driverWrapper = webDriverFactory.initDriver(browser, selenoidURL);
+        drivers.set(webDriverFactory.initDriver(browser, selenoidURL));
         setURL();
     }
 
@@ -58,12 +59,12 @@ public class TestBase {
 
     }
 
-    @AfterSuite(groups = {"Config"})
+    @AfterSuite()
     public void quitDriver() {
-        driver.quit();
+        drivers.get().quit();
     }
 
     public WebDriverWrapper getDriver() {
-        return driver;
+        return drivers.get();
     }
 }

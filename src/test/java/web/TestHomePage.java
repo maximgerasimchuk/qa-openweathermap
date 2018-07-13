@@ -18,14 +18,14 @@ import java.util.List;
  * Created by maxim on 1/28/2017.
  */
 public class TestHomePage extends TestBase {
-    private HomePage homePage;
-    private ResultPage resultPage;
-    private Header header;
+    private ThreadLocal<HomePage> homePage = new ThreadLocal<>();
+    private ThreadLocal<ResultPage> resultPage = new ThreadLocal<>();
+    private ThreadLocal<Header> header = new ThreadLocal<>();
 
     private void initPages(){
-        homePage = new HomePage(driver, URL);
-        resultPage = new ResultPage(driver);
-        header = new Header(driver);
+        homePage.set(new HomePage(getDriver(), URL));
+        resultPage.set(new ResultPage(getDriver()));
+        header.set(new Header(getDriver()));
     }
 
     @DataProvider
@@ -40,23 +40,23 @@ public class TestHomePage extends TestBase {
     @Test(dataProvider = "cityData")
     public void testCurrentWeatherByCity(String city) {
         initPages();
-        homePage.open();
-        homePage.fillSearch(city);
-        homePage.search();
-        Assert.assertTrue(resultPage.verifySearchRequest(homePage));
+        homePage.get().open();
+        homePage.get().fillSearch(city);
+        homePage.get().search();
+        Assert.assertTrue(resultPage.get().verifySearchRequest(homePage.get()));
 
-        header.goToHomePage();
+        header.get().goToHomePage();
     }
 
     @Test
     public void testLinksOnHomePage() {
         initPages();
-        homePage.open();
-        List<WebElement> list = homePage.getListOfAllLinks();
+        homePage.get().open();
+        List<WebElement> list = homePage.get().getListOfAllLinks();
         ReportWriter.logInfo("Total number of links on HomePage is: '" + list.size() + "'.");
         for (WebElement element : list) {
             try {
-                String response = homePage.isLinkBroken(new URL(element.getAttribute("href")));
+                String response = homePage.get().isLinkBroken(new URL(element.getAttribute("href")));
                 ReportWriter.logInfo("URL: " + element.getAttribute("href") + " returned: " + response);
                 Assert.assertEquals(response, "OK");
             } catch (Exception e) {

@@ -4,3 +4,5 @@ src/main/main.iml
 src/test/test.iml
 target/
 debug.log
+.DS_Store
+allure-results

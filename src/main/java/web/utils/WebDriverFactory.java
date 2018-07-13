@@ -2,6 +2,8 @@ package web.utils;
 
 import api.utils.ReportWriter;
 import api.utils.YamlFileReader;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import web.ConfigEntity;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +19,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.logging.Level;
 
 /**
@@ -32,51 +37,56 @@ public class WebDriverFactory {
     private static WebDriverWrapper driverWrapper;
     private static ConfigEntity param;
 
-    public static WebDriverWrapper initDriver(String browser) {
-        Dimension dimension = new Dimension(1920, 1080);
+    public static WebDriverWrapper initDriver(String browser, String selenoidURL) {
+        Dimension dimension = new Dimension(1280, 800);
+        DesiredCapabilities capabilities = setDefaultChromeCapabilities();
 
-        if (browser.equals(FIREFOX)) {
-            DesiredCapabilities capabilities = setDefaultFirefoxCapabilities();
-            driver = new FirefoxDriver(capabilities);
-            driver.manage().window().maximize();
-            driver.manage().window().setSize(dimension);
-            driverWrapper = new WebDriverWrapper(driver);
-        } else if (browser.equals(CHROME)) {
-            param = new ConfigEntity();
-            param = YamlFileReader.fromYaml(ConfigEntity.class, System.getProperty("user.dir") + "/src/test/config/webDriverConfig.yml");
+        if (selenoidURL == null || selenoidURL == "") {
 
-            File chromeDriverPath = new File(param.getChromeDriverPath());
-            if (chromeDriverPath.exists()) {
-                ReportWriter.logInfo("Set property webdriver.chrome.driver = '" + chromeDriverPath.getAbsolutePath().toString() + "'");
-                System.setProperty("webdriver.chrome.driver", chromeDriverPath.getAbsolutePath());
+            if (browser.equals(FIREFOX)) {
+                capabilities = setDefaultFirefoxCapabilities();
+                driver = new FirefoxDriver(capabilities);
+                driver.manage().window().maximize();
+                driver.manage().window().setSize(dimension);
+            } else if (browser.equals(CHROME)) {
+                param = new ConfigEntity();
+                param = YamlFileReader.fromYaml(ConfigEntity.class, System.getProperty("user.dir") + "/src/test/config/webDriverConfig.yml");
+
+                File chromeDriverPath = new File(param.getChromeDriverPath());
+                if (chromeDriverPath.exists()) {
+                    ReportWriter.logInfo("Set property webdriver.chrome.driver = '" + chromeDriverPath.getAbsolutePath().toString() + "'");
+                    System.setProperty("webdriver.chrome.driver", chromeDriverPath.getAbsolutePath());
+                }
+
+                capabilities = setDefaultChromeCapabilities();
+                driver = new ChromeDriver(capabilities);
+                driver.manage().window().maximize();
+            } else if (browser.equals(IE)) {
+                param = new ConfigEntity();
+                param = YamlFileReader.fromYaml(ConfigEntity.class, System.getProperty("user.dir") + "/src/test/config/webDriverConfig.yml");
+
+                File ieDriverPath = new File(param.getIeDriverPath());
+                if (ieDriverPath.exists()) {
+                    System.setProperty("webdriver.ie.driver", ieDriverPath.getAbsolutePath());
+                }
+                capabilities = setDefaultIeCapabilities();
+                driver = new InternetExplorerDriver(capabilities);
+                driver.manage().window().setSize(dimension);
+            } else if (browser.equals(SAFARI)) {
+                driver = new SafariDriver();
             }
-
-            DesiredCapabilities capabilities = setDefaultChromeCapabilities();
-            driver = new ChromeDriver(capabilities);
-            driver.manage().window().maximize();
-            driverWrapper = new WebDriverWrapper(driver);
-        } else if (browser.equals(IE)) {
-            param = new ConfigEntity();
-            param = YamlFileReader.fromYaml(ConfigEntity.class, System.getProperty("user.dir") + "/src/test/config/webDriverConfig.yml");
-
-            File ieDriverPath = new File(param.getIeDriverPath());
-            if (ieDriverPath.exists()) {
-                System.setProperty("webdriver.ie.driver", ieDriverPath.getAbsolutePath());
+        } else {
+            try {
+                ReportWriter.logInfo("Start initialize RemoteWebDriver");
+                driver = new RemoteWebDriver(URI.create(selenoidURL).toURL(), capabilities);
+                driver.manage().window().setSize(dimension);
+                ReportWriter.logInfo("Stop initialize RemoteWebDriver");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
-            DesiredCapabilities capabilities = setDefaultIeCapabilities();
-            driver = new InternetExplorerDriver(capabilities);
-            driver.manage().window().setSize(dimension);
-            driverWrapper = new WebDriverWrapper(driver);
-        }
-//        else if (browser.equals(SAFARI)) {
-//            driver = new SafariDriver();
-//            driverWrapper = new WebDriverWrapper(driver);
-//        }
-        else {
-            Assert.fail("No information about launching '" + browser + "' browser!!!");
         }
 
-        return driverWrapper;
+        return new WebDriverWrapper(driver);
     }
 
     public static WebDriverWrapper getDriverWrapper() {
@@ -85,17 +95,17 @@ public class WebDriverFactory {
 
     private static DesiredCapabilities setDefaultChromeCapabilities() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--start-maximized");
-//        options.addArguments("user-data-dir=D:\\UserDataDir");
-//        options.addArguments("-incognito");
-        options.addArguments("--no-sandbox");
 
         DesiredCapabilities caps = DesiredCapabilities.chrome();
         LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.BROWSER, Level.ALL);
         caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
         caps.setCapability(ChromeOptions.CAPABILITY, options);
+        caps.setBrowserName("chrome");
+        caps.setVersion("66.0");
         caps.setCapability("ignoreZoomSetting", true);
+        caps.setCapability("enableVNC", true);
+        caps.setCapability("enableVideo", false);
 
         return caps;
     }
@@ -105,6 +115,8 @@ public class WebDriverFactory {
         firefoxProfile.setEnableNativeEvents(true);
         DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
         firefoxCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+        firefoxCapabilities.setCapability("enableVNC", false);
+        firefoxCapabilities.setCapability("enableVideo", false);
 
         return firefoxCapabilities;
     }
@@ -115,6 +127,8 @@ public class WebDriverFactory {
         logPrefs.enable(LogType.BROWSER, Level.ALL);
         caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
         caps.setCapability("ignoreZoomSetting", true);
+        caps.setCapability("enableVNC", true);
+        caps.setCapability("enableVideo", false);
 
         return caps;
     }

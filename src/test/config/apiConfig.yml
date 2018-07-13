@@ -1,4 +1,4 @@
-apiKey: NEED_TO_CHANGE
+apiKey: eea29a8b791e6f24841de0f137c6961c
 baseURL: http://api.openweathermap.org/data/2.5
 methods:
   currentWeatherURL: http://api.openweathermap.org/data/2.5/weather
