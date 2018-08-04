@@ -3,9 +3,10 @@ package api.requests;
 import api.entities.WeatherParamRQ;
 import api.utils.JsonUtil;
 import api.utils.ReportWriter;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Header;
-import com.jayway.restassured.response.ValidatableResponse;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
+import io.restassured.http.Header;
+import io.restassured.response.ValidatableResponse;
 
 import java.util.Map;
 
@@ -34,11 +35,12 @@ public class WeatherRequest {
     public ValidatableResponse send() {
         ValidatableResponse response = RestAssured.
                 given().
+                    filter(new AllureRestAssured()).
                     baseUri(URL).
                     header(header).
                     params(parametersMap).
                 when().
-                get().
+                    get().
                 then();
         ReportWriter.logInfo("Weather Request: " + parametersMap.entrySet().toString());
         JsonUtil.jsonToFile("Response", response.extract().asString());

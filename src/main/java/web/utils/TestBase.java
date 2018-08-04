@@ -11,19 +11,18 @@ import org.testng.annotations.*;
 @Listeners(CustomTestListener.class)
 public class TestBase {
     private static ThreadLocal<WebDriverWrapper> drivers = new ThreadLocal<>();
-    private String selenoidURL = "http://127.0.0.1:4444/wd/hub";
+    private String selenoidURL;
     protected static String URL;
     protected static String environment;
     protected static String browser;
     protected static String branchName;
 
-    @BeforeTest()
-    @Parameters()
+    @BeforeTest(alwaysRun = true)
+    @Parameters("browser")
     public void setUp() {
         PropertyConfigurator.configure("src/main/resources/log4j.properties");
         getProperties();
         WebDriverFactory webDriverFactory = new WebDriverFactory();
-        WebDriverWrapper driverWrapper = webDriverFactory.initDriver(browser, selenoidURL);
         drivers.set(webDriverFactory.initDriver(browser, selenoidURL));
         setURL();
     }
@@ -32,6 +31,7 @@ public class TestBase {
         browser = System.getProperty("browser");
         environment = System.getProperty("environment");
         branchName = System.getProperty("branchName");
+        selenoidURL = "http://127.0.0.1:4444/wd/hub";
 
         if (browser == null || browser.equals("")) {
             browser = "chrome";
