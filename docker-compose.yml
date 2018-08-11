@@ -26,6 +26,8 @@ services:
       - "49000:49000"
     volumes:
       - "$PWD/jenkins-data:/var/jenkins_home"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     restart: "always"
     environment:
       - JENKINS_SLAVE_AGENT_PORT=49000
+      - usr/local/bin/docker-compose
