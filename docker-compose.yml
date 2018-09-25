@@ -20,14 +20,13 @@ services:
       - "8080:8080"
     command: ["--selenoid-uri", "http://selenoid:4444"]
   jenkins:
-    image: "jenkinsci/blueocean"
+    image: "jenkins"
     ports:
       - "8085:8080"
       - "49000:49000"
     volumes:
-      - "$PWD/jenkins-data:/var/jenkins_home"
+      - "/Users/mgerasimchuk/jenkins_home:/var/jenkins_home"
       - "/var/run/docker.sock:/var/run/docker.sock"
     restart: "always"
     environment:
-      - JENKINS_SLAVE_AGENT_PORT=49000
-      - usr/local/bin/docker-compose
+      - DOCKER_HOST=unix:///var/run/docker.sock
